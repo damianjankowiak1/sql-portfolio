@@ -14,5 +14,7 @@ Each query includes comments explaining its purpose and result.
 ## Exercises:
 
 [Exercise 1: Show all columns](./basics.sql#L1-L14)
+
 [Exercise 2: Show table layout](./basics.sql#L16-L30)
+
 [Exercise 3: Show multiple columns](./basics.sql#L32-L51)
