@@ -11,6 +11,6 @@ Examples show how to calculate metrics and perform grouped analysis.
 
 ## Exercises:
 
-[Exercise 1: Count total customers](./basics.sql#L1-L18)
+[Exercise 1: Count total customers](./aggregations.sql#L1-L18)
 
-[Exercise 2: Count unique rental rates](./basics.sql#L20-L34)
+[Exercise 2: Count unique rental rates](./aggregations.sql#L20-L34)
