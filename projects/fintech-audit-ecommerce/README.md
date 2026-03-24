@@ -46,12 +46,8 @@ This partnership allowed for the rapid delivery of senior-level analytical patte
 * **Revenue Share Analysis:** Quantifying the Pareto effect (e.g., identifying the small % of "Champions" driving the majority of revenue).
 
 ## 📈 Key Business Findings (Simulated)
-| KPI | Result | Status |
-| :--- | :--- | :--- |
-| **Data Reliability** | 99.98% Structural Accuracy | **PASS** |
-| **SLA Breach Rate** | 12.4% (Highest in Savannah GA DC) | **WARNING** |
-| **Return Leakage** | $45k margin lost in 'Swimwear' category | **CRITICAL** |
-| **Top Segment** | 'Champions' drive 42.6% of total revenue | **OPPORTUNITY** |
+
+> *Business logic implemented, visualization pending*
 
 ## 🛠️ Tech Stack
 - **Engine:** Google BigQuery (SQL)
