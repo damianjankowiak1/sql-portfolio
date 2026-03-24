@@ -34,7 +34,7 @@ SELECT
     CASE 
         WHEN total_orders = unique_orders AND orphan_orders = 0 AND order_null_pks = 0 THEN 'PASS'
         WHEN order_null_pks > 0 THEN 'FAIL - PK NULLS FOUND'
-        WHEN duplicate_count > 0 THEN 'FAIL - DUPLICATES FOUND'
+        WHEN (total_orders - unique_orders) > 0 THEN 'FAIL - DUPLICATES FOUND'
         WHEN orphan_orders > 0 THEN 'FAIL - ORPHAN RECORDS FOUND'
         ELSE 'FAIL - UNEXPECTED ERROR'
     END AS audit_status
