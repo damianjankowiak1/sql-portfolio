@@ -1,96 +1,153 @@
 -- =============================================================================
--- PROJECT: Financial Data Integrity Audit (theLook eCommerce)
--- STEP 03: STRATEGIC CUSTOMER SEGMENTATION (RFM MODEL)
+-- PROJECT: Strategic CRM Audit (theLook eCommerce)
+-- STEP 03: ADVANCED RFM CUSTOMER SEGMENTATION & PLAYBOOK
 -- AUTHOR: Damian Jankowiak
--- PURPOSE: Classifying the customer base into 10 strategic segments based on 
---          Recency, Frequency, and Monetary value.
+-- PURPOSE: Advanced behavioral segmentation engine to drive marketing ROI
+--          and identify high-value customer clusters.
 -- =============================================================================
 
 -- -----------------------------------------------------------------------------
--- TASK: RFM ENGINE (RECENCY, FREQUENCY, MONETARY)
--- BUSINESS QUESTION: Who are our "Champions" (High Value), and who are our 
---                    "At Risk" customers (Churn potential)?
--- AUDIT SHIELD: AUDIT 1 & 2 (Uniqueness & Financial Health) ensure that 
---               Lifetime Value (LTV) is not inflated by duplicates or $0 prices.
+-- TASK: RFM ENGINE WITH STRATEGIC PLAYBOOK
+-- BUSINESS QUESTION: How can we translate raw transaction history into 
+--                    targeted marketing actions and churn prevention?
 -- -----------------------------------------------------------------------------
 
 /* VALUE ADD:
-1. Targeted Marketing: Stop wasting budget on "Lost" customers, focus on "Loyalists".
-2. Churn Prevention: Identify "Can't Lose Them" segment before they leave.
-3. Revenue Optimization: Increase Average Order Value (AOV) via Upselling to "Promising" clients.
+1. Identifying "Whales" & "Champions" who drive the majority of Net Revenue.
+2. Automating the decision-making process for CRM & Loyalty programs.
+3. Quantifying "At Risk" segments to prioritize immediate retention efforts.
 */
 
 -- 1.1 DATA AGGREGATION LAYER (Raw Metrics)
-WITH customer_raw_metrics AS (
+WITH customer_metrics AS (
+    -- STEP 1: Aggregating Raw RFM Data
     SELECT 
         user_id,
-        -- Recency: Days since last order
         DATE_DIFF(CURRENT_DATE(), MAX(DATE(created_at)), DAY) AS recency_days,
-        -- Frequency: Total count of successful orders
         COUNT(order_id) AS frequency_count,
-        -- Monetary: Total Net Revenue (Success only)
-        ROUND(SUM(sale_price), 2) AS monetary_value
+        SUM(sale_price) AS monetary_value -- No rounding here yet
     FROM `bigquery-public-data.thelook_ecommerce.order_items`
-    WHERE status NOT IN ('Cancelled', 'Returned') -- Audit: Analyze only "Real Cash"
+    WHERE 
+        DATE(created_at) >= DATE_SUB(CURRENT_DATE(), INTERVAL 1 YEAR)
+        AND DATE(created_at) <= CURRENT_DATE()
+        AND status NOT IN ('Cancelled', 'Returned')
     GROUP BY 1
 ),
 
--- 1.2 SCORING LAYER (Quantile Ranking 1-5)
 rfm_scores AS (
+    -- STEP 2: Statistical Quintile Ranking
     SELECT 
         *,
-        -- R Score: 5 is most recent (Lower days = Higher score)
-        NTILE(5) OVER (ORDER BY recency_days DESC) AS r_score,
-        -- F Score: 5 is most frequent
-        NTILE(5) OVER (ORDER BY frequency_count ASC) AS f_score,
-        -- M Score: 5 is highest spender
-        NTILE(5) OVER (ORDER BY monetary_value ASC) AS m_score
-    FROM customer_raw_metrics
+        NTILE(5) OVER(ORDER BY recency_days DESC) AS r_score,
+        NTILE(5) OVER(ORDER BY frequency_count ASC) AS f_score,
+        NTILE(5) OVER(ORDER BY monetary_value ASC) AS m_score
+    FROM customer_metrics
 ),
 
--- 1.3 SEGMENTATION LOGIC (Strategic Classification)
 rfm_segments AS (
+    -- STEP 3: Mapping Behavior to Strategic Segments
     SELECT 
         *,
-        CONCAT(CAST(r_score AS STRING), CAST(f_score AS STRING), CAST(m_score AS STRING)) AS rfm_cell,
         CASE 
             WHEN r_score >= 4 AND f_score >= 4 AND m_score >= 4 THEN 'CHAMPIONS'
-            WHEN r_score >= 4 AND f_score >= 2 AND m_score >= 2 THEN 'LOYAL CUSTOMERS'
-            WHEN r_score >= 3 AND f_score >= 3 AND m_score >= 1 THEN 'POTENTIAL LOYALISTS'
-            WHEN r_score >= 4 AND f_score = 1 THEN 'NEW CUSTOMERS'
-            WHEN r_score = 3 AND f_score <= 2 THEN 'ABOUT TO SLEEP'
-            WHEN r_score <= 2 AND f_score >= 4 AND m_score >= 4 THEN 'CANNOT LOSE THEM'
-            WHEN r_score <= 2 AND f_score <= 2 AND m_score <= 2 THEN 'LOST / HIBERNATING'
-            ELSE 'NEED ATTENTION'
-        END AS customer_segment
+            WHEN r_score >= 4 AND f_score >= 3 AND m_score >= 3 THEN 'LOYAL CUSTOMERS'
+            WHEN r_score >= 4 AND f_score <= 2 THEN 'NEW / PROMISING'
+            WHEN r_score >= 3 AND f_score <= 2 AND m_score >= 4 THEN 'BIG SPENDERS / WHALES'
+            WHEN r_score <= 2 AND f_score >= 3 AND m_score >= 3 THEN 'AT RISK - HIGH VALUE'
+            WHEN f_score >= 4 AND m_score <= 2 THEN 'LOW-VALUE BARGAIN HUNTERS'
+            WHEN r_score <= 2 AND f_score <= 2 AND m_score <= 2 THEN 'HIBERNATING / LOST'
+            ELSE 'POTENTIAL LOYALISTS / OTHERS'
+        END AS rfm_segment
     FROM rfm_scores
+),
+
+final_playbook_logic AS (
+    -- STEP 4: Strategic Playbook (Business Logic Layer)
+    SELECT
+        *,
+        CASE rfm_segment
+            WHEN 'CHAMPIONS' THEN 'Reward & Retain'
+            WHEN 'LOYAL CUSTOMERS' THEN 'Increase AOV'
+            WHEN 'NEW / PROMISING' THEN 'Build Habit'
+            WHEN 'BIG SPENDERS / WHALES' THEN 'High-Touch Service'
+            WHEN 'AT RISK - HIGH VALUE' THEN 'Immediate Win-Back'
+            WHEN 'LOW-VALUE BARGAIN HUNTERS' THEN 'Protect Margin'
+            WHEN 'HIBERNATING / LOST' THEN 'Minimize Waste'
+            ELSE 'Re-evaluate Segment'
+        END AS strategic_goal,
+        CASE rfm_segment
+            WHEN 'CHAMPIONS' THEN 'Exclusive early access; VIP events; Personal manager.'
+            WHEN 'LOYAL CUSTOMERS' THEN 'Cross-sell; Tier-based rewards; Bundle offers.'
+            WHEN 'NEW / PROMISING' THEN 'Onboarding sequence; 30-day second purchase discount.'
+            WHEN 'BIG SPENDERS / WHALES' THEN 'White-glove delivery; Priority support.'
+            WHEN 'AT RISK - HIGH VALUE' THEN 'Personalized win-back; 20%+ reactivation coupon.'
+            WHEN 'LOW-VALUE BARGAIN HUNTERS' THEN 'Free delivery threshold; Clearance notifications.'
+            WHEN 'HIBERNATING / LOST' THEN 'Final reactivation; Clean from list.'
+            ELSE 'Standard communication.'
+        END AS suggested_action,
+        CASE rfm_segment
+            WHEN 'CHAMPIONS' THEN 1 
+			WHEN 'LOYAL CUSTOMERS' THEN 2 
+            WHEN 'NEW / PROMISING' THEN 3 
+			WHEN 'BIG SPENDERS / WHALES' THEN 4 
+            WHEN 'AT RISK - HIGH VALUE' THEN 5 
+			WHEN 'LOW-VALUE BARGAIN HUNTERS' THEN 6 
+            WHEN 'HIBERNATING / LOST' THEN 7 
+			ELSE 8
+        END AS rfm_order
+    FROM rfm_segments
+),
+
+formatted_report AS (
+    -- STEP 5: Formatting Layer (The "Clean" Table)
+    SELECT
+        rfm_segment,
+        COUNT(user_id) AS customer_count,
+        SUM(monetary_value) AS segment_revenue,
+        AVG(monetary_value) AS segment_avg_monetary,
+        strategic_goal,
+        suggested_action,
+        rfm_order
+    FROM final_playbook_logic
+    GROUP BY 1, 5, 6, 7
 )
 
--- 1.4 FINAL REPORTING LAYER (Executive Summary)
+-- FINAL OUTPUT: The "CEO View"
 SELECT 
-    customer_segment,
-    COUNT(user_id) AS customer_count,
-    ROUND(AVG(recency_days), 0) AS avg_recency,
-    ROUND(AVG(frequency_count), 1) AS avg_frequency,
-    ROUND(AVG(monetary_value), 2) AS avg_monetary,
-    -- KPI: Share of Total Revenue per Segment
-    ROUND(SUM(monetary_value) / SUM(SUM(monetary_value)) OVER() * 100, 2) AS revenue_share_pct,
-    -- STRATEGIC ACTION
-    CASE 
-        WHEN customer_segment = 'CHAMPIONS' THEN 'REWARD & CROSS-SELL'
-        WHEN customer_segment = 'CANNOT LOSE THEM' THEN 'HIGH-VALUE DISCOUNT / RETENTION'
-        WHEN customer_segment = 'NEW CUSTOMERS' THEN 'ONBOARDING CAMPAIGN'
-        WHEN customer_segment = 'LOST / HIBERNATING' THEN 'DO NOT SPEND'
-        ELSE 'MONITOR'
-    END AS marketing_action
-FROM rfm_segments
-GROUP BY 1
-ORDER BY avg_monetary DESC;
+    rfm_segment,
+    customer_count,
+    ROUND(customer_count / SUM(customer_count) OVER() * 100, 2) AS pct_of_base,
+    ROUND(segment_revenue, 2) AS revenue_usd,
+    ROUND(segment_revenue / SUM(segment_revenue) OVER() * 100, 2) AS revenue_share_pct,
+    ROUND(segment_avg_monetary, 2) AS avg_monetary_usd,
+    strategic_goal,
+    suggested_action
+FROM formatted_report
+ORDER BY rfm_order ASC;
 
 /* MOCK OUTPUT / STRATEGIC INSIGHT:
-| customer_segment   | customer_count | revenue_share_pct | marketing_action                |
-|--------------------|----------------|-------------------|---------------------------------|
-| CHAMPIONS          | 1250           | 45.20%            | REWARD & CROSS-SELL             |
-| CANNOT LOSE THEM   | 450            | 12.80%            | HIGH-VALUE DISCOUNT / RETENTION |
-| LOST / HIBERNATING | 5600           | 5.10%             | DO NOT SPEND                    |
+| rfm_segment     | customer_count | pct_of_base    | avg_monetary_usd   | strategic_goal  |
+|-----------------|----------------|----------------|--------------------|-----------------|
+| CHAMPIONS       | 8161           | 14.54%         | 246.39             | Reward & Retain |
+| LOYAL CUSTOMERS | 4629           | 6.0%           | 100.84             | Increase AOV    |
+*/
+
+
+
+
+/* 
+-----------------------------------------------------------------------------
+AI COLLABORATION LOG & HUMAN AUDIT:
+-----------------------------------------------------------------------------
+1. STRATEGIC PLAYBOOK (Human): Transformed raw RFM scores into an actionable 
+   "Strategic Playbook" by mapping segments to specific business goals 
+   (e.g., Churn Prevention vs. Loyalty Rewards).
+2. OPERATIONAL RELEVANCE (Human): Implemented a dynamic 1-year rolling window 
+   (INTERVAL 1 YEAR) to filter out historical noise and focus the analysis 
+   on active customers, ensuring the report reflects current business health.
+3. REPORTING LAYER (Human): Designed the "CEO View" summary, prioritizing 
+   % of Revenue Share and Customer Count for high-level decision making.
+4. IMPLEMENTATION (AI): Optimized the NTILE(5) scoring logic and CTE-based 
+   layering for final report formatting.
+-----------------------------------------------------------------------------
 */
