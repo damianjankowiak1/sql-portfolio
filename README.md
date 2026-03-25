@@ -1,4 +1,4 @@
-# Damian Jankowiak | Technical Support & Data Integrity Specialist 📊
+# Damian Jankowiak | Application Support Engineer & Data Analyst 📊
 
 Welcome to my SQL Portfolio. I specialize in **Application Support**, **Business Process Optimization**, and **Financial Data Integrity**, with a strong focus on bridging the gap between complex IT environments and business requirements.
 
