@@ -1,51 +1,55 @@
-# Damian Jankowiak | Application Support Engineer & Data Analyst 📊
+# Damian Jankowiak | Application Support Engineer — FinTech & Financial Systems
 
-Welcome to my SQL Portfolio. I specialize in **Application Support**, **Business Process Optimization**, and **Financial Data Integrity**, with a strong focus on bridging the gap between complex IT environments and business requirements.
-
----
-
-## 🚀 Professional Profile
-
-I bring a unique combination of deep technical troubleshooting (SQL, Data Analysis, Application Support) and high-level financial domain expertise (**IFRS 16 Compliance**). My approach is data-driven: I don't just "fix tickets" – I identify root causes, audit data anomalies, and leverage **AI-powered analytics** to drive business value.
-
-- 🎓 **Google AI Certified (Umiejętności Jutra AI 2.0)** – Expert in Prompt Engineering & AI Adoption.
-- 💼 **Ex-Aptitude Software** – Specialist in Financial Application Support & Audit Trail Integrity.
-- 🛠️ **Tech Stack:** SQL (RDMBS, BigQuery), Python (Data extraction & basic visualization), Jira, IFRS 16 Standards.
+Welcome to my SQL portfolio. I specialize in **Application Support**, **Root Cause Analysis**, and **Financial Data Integrity**, with hands-on experience supporting enterprise clients in regulated, high-stakes financial environments.
 
 ---
 
-## 📂 Featured Project: Financial Data Audit (BigQuery)
+## Professional Profile
 
-### [Project: Financial Data Integrity Audit - theLook eCommerce](./projects/fintech-audit-ecommerce/)
-**Business Case:** Simulating a high-stakes financial audit in a large-scale e-commerce environment.
-- **The Challenge:** Detecting "Revenue Leakage" and orphan records in a non-enforced RDBMS environment (BigQuery).
-- **The Solution:** Developed complex SQL scripts utilizing **CTEs** and **Window Functions** to track the financial lifecycle of transactions and identify discrepancies between order processing and payment.
-- **The Impact:** Created a framework for automated data integrity checks that mimics the logic used in enterprise-grade financial engines (like IFRS 16 compliance tools).
+4+ years in technical support for financial systems (Aptitude Software), managing L2 production incidents across RDBMS environments (MySQL) within ITIL 4 frameworks — 300+ escalated incidents resolved, ~95% team SLA maintained. Client-facing throughout, supporting enterprise clients including SKF and Compass on ALAE, an IFRS 16 / ASC 842 lease accounting SaaS platform. My approach is data-driven and root-cause first: I don't just close tickets — I trace issues to source and fix the underlying cause.
+
+- **Ex-Aptitude Software** — L2 Application Support, financial application audit trail integrity, IFRS 16 compliance
+- **4.97/5.0 CSAT** across 378 client engagements; recipient of the Excellence in Diligence & Quality Assurance award
 
 ---
 
-## 🛠️ Technical Skills
+## Featured Project: Financial Data Integrity Audit (BigQuery)
+
+### [Project: Financial Data Integrity Audit – theLook eCommerce](./projects/fintech-audit-ecommerce/)
+**Status:** Phase 1 complete — data extraction & analysis. Phase 2 planned — interactive dashboard integration.
+
+**Business Case:** An "Audit-First" analytical framework for a global e-commerce dataset — no business insight is generated until data passes a multi-stage financial integrity gate.
+- **The Challenge:** Structural and chronological data anomalies (duplicate keys, orphaned records, timeline inconsistencies) corrupting logistics and revenue KPIs in a non-enforced RDBMS environment (BigQuery).
+- **The Solution:** SQL-based integrity gate (CTEs, window functions) followed by item-level SLA benchmarking against network-wide DC performance, and a 10-segment RFM customer playbook mapping each segment to a strategic action.
+- **A key correction:** Caught and fixed a flawed order-level granularity approach that would have masked real per-item Distribution Center performance — shifted the analysis to item-level before drawing conclusions.
+- **The Impact:** A reusable data-integrity framework mirroring the logic used in enterprise financial compliance tooling — explainable to non-technical stakeholders reviewing audit findings, not just technically correct.
+
+---
+
+## Technical Skills
 
 | Domain | Tools & Technologies |
 | :--- | :--- |
-| **Data & SQL** | BigQuery, PostgreSQL, RDBMS, CTEs, Window Functions |
-| **AI & Automation** | Prompt Engineering & AI Diagnostics |
-| **IT Ops & Support** | Jira Service Management, ITIL, Application Support, Technical Troubleshooting |
-| **Business Analysis** | IFRS 16, Process Optimization (BPI), Stakeholder Management |
+| **Data & SQL** | MySQL, PostgreSQL, BigQuery, CTEs, Window Functions |
+| **Data Extraction & Reporting** | Python (pandas) — DB connectivity, result generation & visualization |
+| **IT Ops & Support** | Jira Service Management, ITIL 4/5, Application Support, Root Cause Analysis |
+| **Integration** | REST API, Postman |
+| **Financial Domain** | IFRS 16 / ASC 842, Financial Data Integrity, Audit Trail Compliance |
 
 ---
 
-## 📈 Certificates & Learning Path
-- **Google AI 2.0 (Umiejętności Jutra)**: Specialized in leveraging Generative AI for data analysis and process automation and optimization.
-- **Cisco CCNA (Introduction to Networks)**: Foundational understanding of network architecture and security.
-- **Social Media Marketing (Lodz University of Technology)**: Understanding customer experience and digital marketing metrics.
+## Certificates
+- **ITIL 5 Foundation**
+- **Cisco CCNA (Introduction to Networks)** — foundational networking, completed during studies
 
 ---
 
-## 🤝 Let's Connect
-I am currently looking for new challenges in **Application Support, Data Analysis, or Junior Business Analyst** roles.
+## Also building: [fintech-prod-lab](https://github.com/damianjankowiak1/fintech-prod-lab) — a fintech-style production environment simulation (early stage)
 
-- **LinkedIn:** [www.linkedin.com/in/damian-jankowiak](www.linkedin.com/in/damian-jankowiak)
+---
+
+## Let's Connect
+Currently seeking an **Application Support** role in FinTech/enterprise SaaS, with a longer-term path toward **Implementation/Solutions Consulting**.
+
+- **LinkedIn:** linkedin.com/in/damian-jankowiak
 - **Location:** Wrocław, Poland (Hybrid/Remote)
-
-*"Quality is not an act, it is a habit. In data, integrity is everything."*
